@@ -1,12 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import {getCurrentUser} from '../actions'
+import {getCurrentUser,logout} from '../actions'
 
 class Header extends React.Component {
 
   componentDidMount =()=>{
       this.props.getCurrentUser()
+  }
+
+  logoutClick = ()=>{
+    this.props.logout()
   }
 
   renderChangeOnSignIn = () => {
@@ -31,6 +35,11 @@ class Header extends React.Component {
             {this.props.user.username}
          </Link>
           </li>
+          <li className="nav-item">
+          <Link to="/" onClick={this.logoutClick} className="nav-link" >
+           Logout
+          </Link>
+          </li>
         </ul>
       )
     }
@@ -53,7 +62,7 @@ class Header extends React.Component {
   }
 
   render() {
-    console.log(this.props)
+    //console.log(this.props)
     return (
       <nav className="navbar navbar-light">
         <div className="container">
@@ -66,7 +75,7 @@ class Header extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { user:state.profile.user }
+  return { user:state.profile.user}
 }
 
-export default connect(mapStateToProps, {getCurrentUser})(Header)
+export default connect(mapStateToProps, {getCurrentUser,logout})(Header)

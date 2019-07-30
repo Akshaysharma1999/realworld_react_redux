@@ -17,7 +17,15 @@ export const login = (formValues)=>{
             localStorage.setItem('jwt', JSON.stringify(response.data.user.token))  
 
             dispatch({type:'LOGIN',payload:response.data})
-          
+            history.push(`/profile/${response.data.user.username}`)          
+    }
+   
+}
+
+export const logout =()=>{
+    localStorage.setItem('jwt', null)
+    return{
+        type:"LOGOUT"
     }
 }
 

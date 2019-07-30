@@ -1,5 +1,6 @@
 const INITIAL_STATE={
-    currentProfile:null
+    currentProfile:null,
+    user:null
 }
 
 export default (state = INITIAL_STATE,action)=>{
@@ -10,6 +11,14 @@ export default (state = INITIAL_STATE,action)=>{
     else if(action.type === 'USER')
     {
         return{...state,user:action.payload.user}
+    }
+    else if(action.type === 'LOGIN')
+    {
+        return{...state,user:action.payload.user}
+    }
+    else if(action.type === 'LOGOUT')
+    {
+        return{...state,user:null}
     }
     else
     {
