@@ -1,11 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import {getCurrentUser} from '../actions'
 
 class Header extends React.Component {
 
+  componentDidMount =()=>{
+      this.props.getCurrentUser()
+  }
+
   renderChangeOnSignIn = () => {
-    if (this.props.isSignedIn) {
+    if (this.props.user) {
       return (
         <ul className="nav navbar-nav pull-xs-right">
           <li className="nav-item">
@@ -22,8 +27,8 @@ class Header extends React.Component {
          </Link>
           </li>
           <li className="nav-item">
-            <Link to="/profile" className="nav-link" >
-            {this.props.username}
+            <Link to={`/profile/${this.props.user.username}`} className="nav-link" >
+            {this.props.user.username}
          </Link>
           </li>
         </ul>
@@ -61,7 +66,7 @@ class Header extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { isSignedIn: state.auth.isSignedIn , username:state.auth.username }
+  return { user:state.profile.user }
 }
 
-export default connect(mapStateToProps, {})(Header)
+export default connect(mapStateToProps, {getCurrentUser})(Header)

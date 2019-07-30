@@ -13,9 +13,28 @@ export const signup = (formValues)=>{
 export const login = (formValues)=>{
 
     return async(dispatch,getState)=>{
-            const response = await realworld.post('/users/login',{"user":{...formValues}})        
+            const response = await realworld.post('/users/login',{"user":{...formValues}})      
+            localStorage.setItem('jwt', JSON.stringify(response.data.user.token))  
 
             dispatch({type:'LOGIN',payload:response.data})
-            history.push('/')
+          
+    }
+}
+
+export const getProfile =(username)=>{
+    return async(dispatch,getState)=>{
+
+        const response = await realworld.get(`profiles/${username}`)
+
+        dispatch({type:'GETPROFILE',payload:response.data})        
+    }
+} 
+
+export const getCurrentUser=()=>{
+    return async(dispatch,getState)=>{
+        const response = await realworld.get('/user',{headers:{Authorization:`Token ${JSON.parse(localStorage.getItem('jwt'))}`}})
+        
+        dispatch({type:'USER',payload:response.data})
+       
     }
 }
