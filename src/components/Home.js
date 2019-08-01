@@ -1,20 +1,63 @@
 import React from 'react'
+import { globalFeed } from '../actions'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-const Home = () => {
+class Home extends React.Component {
 
-    return (
-        <div className="home-page">
+    componentDidMount() {
+        this.props.globalFeed()
+    }
 
-            <div className="banner">
-                <div className="container">
-                    <h1 className="logo-font">conduit</h1>
-                    <p>A place to share your knowledge.</p>
+    renderArticle = (article)=>{
+        return(
+        <div className="article-preview" key={article.slug}>
+        <div className="article-meta">
+          <Link to={`/profile/${article.author.username}`}><img src={article.author.image}/></Link>
+          <div className="info">
+            <Link to={`/profile/${article.author.username}`} className="author">{article.author.username}</Link>
+            <span className="date">{article.createdAt}</span>
+          </div>
+          <button className="btn btn-outline-primary btn-sm pull-xs-right">
+            <i className="ion-heart"></i> {article.favoritesCount}
+          </button>
+        </div>
+        <Link to={`/article/${article.slug}`} className="preview-link">
+          <h1>{article.title}</h1>
+          <p>{article.description}</p>
+          <span>Read more...</span>
+        </Link>
+        </div>     )
+    }
+
+    feed = () => {
+        return (
+            
+             this.props.articles.slice(0,2).map((article) => {
+
+                 return (                
+                       this.renderArticle(article)  
+                )
+
+             })
+
+        )
+    }
+
+    render() {
+
+        return (
+            <div className="home-page" >
+
+                <div className="banner">
+                    <div className="container">
+                        <h1 className="logo-font">conduit</h1>
+                        <p>A place to share your knowledge.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div className="container page">
-                <div className="row">
-
+                <div className="container page">
+                    <div className="row">
                     <div className="col-md-9">
                         <div className="feed-toggle">
                             <ul className="nav nav-pills outline-active">
@@ -26,68 +69,36 @@ const Home = () => {
                                 </li>
                             </ul>
                         </div>
-
-                        <div className="article-preview">
-                            <div className="article-meta">
-                                <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-                                <div className="info">
-                                    <a href="" className="author">Eric Simons</a>
-                                    <span className="date">January 20th</span>
-                                </div>
-                                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                                    <i className="ion-heart"></i> 29
-                  </button>
-                            </div>
-                            <a href="" className="preview-link">
-                                <h1>How to build webapps that scale</h1>
-                                <p>This is the description for the post.</p>
-                                <span>Read more...</span>
-                            </a>
+                        {this.feed()}
                         </div>
+                        <div className="col-md-3">
+                            <div className="sidebar">
+                                <p>Popular Tags</p>
 
-                        <div className="article-preview">
-                            <div className="article-meta">
-                                <a href="profile.html"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-                                <div className="info">
-                                    <a href="" className="author">Albert Pai</a>
-                                    <span className="date">January 20th</span>
+                                <div className="tag-list">
+                                    <a href="" className="tag-pill tag-default">programming</a>
+                                    <a href="" className="tag-pill tag-default">javascript</a>
+                                    <a href="" className="tag-pill tag-default">emberjs</a>
+                                    <a href="" className="tag-pill tag-default">angularjs</a>
+                                    <a href="" className="tag-pill tag-default">react</a>
+                                    <a href="" className="tag-pill tag-default">mean</a>
+                                    <a href="" className="tag-pill tag-default">node</a>
+                                    <a href="" className="tag-pill tag-default">rails</a>
                                 </div>
-                                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                                    <i className="ion-heart"></i> 32
-                  </button>
                             </div>
-                            <a href="" className="preview-link">
-                                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                                <p>This is the description for the post.</p>
-                                <span>Read more...</span>
-                            </a>
                         </div>
 
                     </div>
-
-                    <div className="col-md-3">
-                        <div className="sidebar">
-                            <p>Popular Tags</p>
-
-                            <div className="tag-list">
-                                <a href="" className="tag-pill tag-default">programming</a>
-                                <a href="" className="tag-pill tag-default">javascript</a>
-                                <a href="" className="tag-pill tag-default">emberjs</a>
-                                <a href="" className="tag-pill tag-default">angularjs</a>
-                                <a href="" className="tag-pill tag-default">react</a>
-                                <a href="" className="tag-pill tag-default">mean</a>
-                                <a href="" className="tag-pill tag-default">node</a>
-                                <a href="" className="tag-pill tag-default">rails</a>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
 
-        </div>
-    )
+            </div>
+        )
+    }
 
 }
 
-export default Home
+const mapStateToProps = (state) => {
+    return { articles: state.profile.articles }
+}
+
+export default connect(mapStateToProps, { globalFeed })(Home)

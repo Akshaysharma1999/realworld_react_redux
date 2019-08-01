@@ -1,6 +1,8 @@
+import _ from 'lodash'
 const INITIAL_STATE={
     currentProfile:null,
-    user:null
+    user:null,
+    articles:[]
 }
 
 export default (state = INITIAL_STATE,action)=>{
@@ -24,6 +26,11 @@ export default (state = INITIAL_STATE,action)=>{
     {
         return{...state,user:action.payload.user}
     }
+    else if(action.type === 'GLOBAL')
+    {
+        //console.log(action.payload.articles)
+        return{...state,articles:action.payload.articles}
+    }    
     else
     {
         return state

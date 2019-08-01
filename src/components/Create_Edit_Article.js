@@ -1,37 +1,86 @@
 import React from 'react'
+import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import {newPost} from '../actions'
 
-const create_edit_article = ()=>{
-    return(
-        <div className="editor-page">
-  <div className="container page">
-    <div className="row">
+class create_edit_article extends React.Component {
 
-      <div className="col-md-10 offset-md-1 col-xs-12">
-        <form>
-          <fieldset>
-            <fieldset className="form-group">
-                <input type="text" className="form-control form-control-lg" placeholder="Article Title"/>
-            </fieldset>
-            <fieldset className="form-group">
-                <input type="text" className="form-control" placeholder="What's this article about?"/>
-            </fieldset>
-            <fieldset className="form-group">
-                <textarea className="form-control" rows="8" placeholder="Write your article (in markdown)"></textarea>
-            </fieldset>
-            <fieldset className="form-group">
-                <input type="text" className="form-control" placeholder="Enter tags"/><div className="tag-list"></div>
-            </fieldset>
-            <button className="btn btn-lg pull-xs-right btn-primary" type="button">
-                Publish Article
-            </button>
-          </fieldset>
-        </form>
+  renderError = ({ error, touched }) => {
+    if (touched && error) {
+      return (
+        <ul className="error-messages">
+          <li>{error}</li>
+        </ul>
+      )
+    }
+  }
+
+  renderInput = ({ input, label, meta }) => {
+    // console.log(meta)
+    return (
+      <div className="form-group">
+        <label>{label}</label>
+        <input onChange={input.onChange} value={input.value} className="form-control form-control-lg" />
+        {this.renderError(meta)}
       </div>
-
-    </div>
-  </div>
-</div>
     )
+  }
+
+  onSubmit = formValues => {
+    this.props.newPost(formValues)
+  }
+
+  render() {
+    return (
+      <div className="editor-page">
+        <div className="container page">
+          <div className="row">
+
+            <div className="col-md-10 offset-md-1 col-xs-12">
+
+              <form
+                onSubmit={this.props.handleSubmit(this.onSubmit)}
+                className="error"
+              >
+                <Field name="title" component={this.renderInput} label="Article Title" />
+                <Field name="description" component={this.renderInput} label="What's this article about?" />
+                <Field name="body" component={this.renderInput} label="Write your article (in markdown)" />
+                <Field name="tagList" component={this.renderInput} label="tag-list" />
+
+                <button className="btn btn-lg btn-primary pull-xs-right">Publish Article</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
-export default create_edit_article
+const validate = formValues => {
+  const errors = {}
+  if (!formValues.title) {
+    errors.title = 'You must enter a title'
+  }
+
+  if (!formValues.description) {
+    errors.description = 'You must enter a description'
+  }
+
+  if (!formValues.body) {
+    errors.body = 'You must enter a body'
+  }
+
+  if (!formValues.tagList) {
+    errors.tagList = 'You must enter a tagList'
+  }
+
+  return errors
+}
+
+
+
+export default connect(null,{newPost})(reduxForm({
+  form: "articleForm",
+  validate
+})(create_edit_article))

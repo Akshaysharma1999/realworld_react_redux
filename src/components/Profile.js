@@ -10,6 +10,12 @@ class Profile extends React.Component {
     this.props.getProfile(this.props.username)
   }
 
+  settingsOrFollow = () => {
+   
+      return <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
+   
+  }
+
   renderProfile = () => {
     if (this.props.currentProfile == null) {
       return <div>Loading...</div>
@@ -32,8 +38,8 @@ class Profile extends React.Component {
                 Follow Eric Simons 
               </button> */}
               </div>
-              <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
-             
+              {this.settingsOrFollow()}
+
             </div>
           </div>
         </div>

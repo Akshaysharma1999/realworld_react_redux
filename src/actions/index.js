@@ -1,6 +1,12 @@
 import realworld from '../api/realworld'
 import history from '../history'
 
+
+const headers = {
+    'Content-Type': 'application/json',
+     'Authorization': `Token ${JSON.parse(localStorage.getItem('jwt'))}` 
+}
+
 export const signup = (formValues) => {
 
     return async (dispatch, getState) => {
@@ -39,16 +45,11 @@ export const getProfile = (username) => {
 
 export const getCurrentUser = () => {
     return async (dispatch, getState) => {
-        const response = await realworld.get('/user', { headers: { Authorization: `Token ${JSON.parse(localStorage.getItem('jwt'))}` } })
+        const response = await realworld.get('/user', { headers: headers})
 
         dispatch({ type: 'USER', payload: response.data })
 
     }
-}
-
-const headers = {
-    'Content-Type': 'application/json',
-     'Authorization': `Token ${JSON.parse(localStorage.getItem('jwt'))}` 
 }
 
 export const userSettings = (formValues) => {
@@ -59,3 +60,20 @@ export const userSettings = (formValues) => {
         history.push('/')
     }
 }
+
+export const globalFeed = () => {
+    return async (dispatch, getState) => {
+        const response = await realworld.get('/articles')
+        dispatch({type:'GLOBAL',payload:response.data})        
+    }
+}
+
+export const newPost = (formValues)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.post('/articles',{"article":{...formValues}},{headers:headers})
+       
+        history.push('/')
+    }
+}
+
+

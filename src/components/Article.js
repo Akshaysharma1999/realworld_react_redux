@@ -1,7 +1,7 @@
 import React from 'react'
 
-const Article = ()=>{
-    return (<div className="article-page">
+class Article extends React.Component{
+    render(){return (<div className="article-page">
 
     <div className="banner">
       <div className="container">
@@ -120,7 +120,7 @@ const Article = ()=>{
   
     </div>
   
-  </div>)
+  </div>)}
 }
 
 export default Article
