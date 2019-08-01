@@ -1,7 +1,8 @@
 import React from 'react'
-import { getProfile } from '../actions'
+import { getProfile, userSettings } from '../actions'
 import { connect } from 'react-redux'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import Settings from './Settings'
 
 class Profile extends React.Component {
 
@@ -31,7 +32,8 @@ class Profile extends React.Component {
                 Follow Eric Simons 
               </button> */}
               </div>
-
+              <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
+             
             </div>
           </div>
         </div>
@@ -114,9 +116,9 @@ class Profile extends React.Component {
   }
 }
 
-const mapStateToProps = (state,ownProps) => {
+const mapStateToProps = (state, ownProps) => {
 
-  return { currentProfile: state.profile.currentProfile,username:ownProps.match.params.username }
+  return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username }
 }
 
 export default connect(mapStateToProps, { getProfile })(Profile)

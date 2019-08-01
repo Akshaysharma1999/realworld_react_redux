@@ -23,7 +23,7 @@ const App = () => {
                         <Route path = "/login" exact component={Login}/>
                         <Route path = "/signup" exact component={SignUp}/>
                         <Route path = "/profile/:username" exact component={Profile}/>
-                        <Route path = "/settings" exact component={Settings}/>
+                        <Route path ="/settings" exact component ={Settings}/>
                         <Route path = "/article" exact component={Article}/>
                         <Route path = "/createArticle" exact component={Create_Edit_Article}/>
                         <Route path = "/form" exact component={Form}/>

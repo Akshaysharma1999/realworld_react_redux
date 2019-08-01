@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import {getCurrentUser,logout} from '../actions'
+import {getCurrentUser,logout,userSettings} from '../actions'
 
 class Header extends React.Component {
 
@@ -25,12 +25,7 @@ class Header extends React.Component {
               <i className="ion-compose"></i>&nbsp;New Post
          </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/settings" className="nav-link" >
-              <i className="ion-gear-a"></i>&nbsp;Settings
-         </Link>
-          </li>
-          <li className="nav-item">
+         <li className="nav-item">
             <Link to={`/profile/${this.props.user.username}`} className="nav-link" >
             {this.props.user.username}
          </Link>
@@ -78,4 +73,4 @@ const mapStateToProps = (state) => {
   return { user:state.profile.user}
 }
 
-export default connect(mapStateToProps, {getCurrentUser,logout})(Header)
+export default connect(mapStateToProps, {getCurrentUser,logout,userSettings})(Header)

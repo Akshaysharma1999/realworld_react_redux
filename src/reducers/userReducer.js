@@ -20,6 +20,10 @@ export default (state = INITIAL_STATE,action)=>{
     {
         return{...state,user:null}
     }
+    else if(action.type === 'USERSETTINGS')
+    {
+        return{...state,user:action.payload.user}
+    }
     else
     {
         return state
