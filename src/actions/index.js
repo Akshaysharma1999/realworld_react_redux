@@ -1,5 +1,6 @@
 import realworld from '../api/realworld'
 import history from '../history'
+import { async } from 'q';
 
 
 const headers = {
@@ -76,4 +77,18 @@ export const newPost = (formValues)=>{
     }
 }
 
+export const getArticle = (slug)=>{
+    return async(dispatch,getState)=>{
+        const response  = await realworld.get(`/articles/${slug}`)
+       // console.log(response)
+        dispatch({type:'GETARTICLE',payload:response.data})
+    }
+}
 
+export const getComments = (slug)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.get(`/articles/${slug}/comments`)
+
+        dispatch({type:'GETCOMMENTS',payload:response.data})
+    }
+}

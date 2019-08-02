@@ -2,7 +2,9 @@ import _ from 'lodash'
 const INITIAL_STATE={
     currentProfile:null,
     user:null,
-    articles:[]
+    articles:[],
+    article:{},
+    comments:[]
 }
 
 export default (state = INITIAL_STATE,action)=>{
@@ -31,6 +33,14 @@ export default (state = INITIAL_STATE,action)=>{
         //console.log(action.payload.articles)
         return{...state,articles:action.payload.articles}
     }    
+    else if(action.type === 'GETARTICLE')
+    {
+        return{...state,article:action.payload}
+    }
+    else if(action.type === 'GETCOMMENTS')
+    {
+        return{...state,comments:action.payload.comments}
+    }
     else
     {
         return state

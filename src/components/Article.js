@@ -1,126 +1,150 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { getArticle, getComments } from '../actions'
 
-class Article extends React.Component{
-    render(){return (<div className="article-page">
 
-    <div className="banner">
-      <div className="container">
-  
-        <h1>How to build webapps that scale</h1>
-  
-        <div className="article-meta">
-          <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-          <div className="info">
-            <a href="" className="author">Eric Simons</a>
-            <span className="date">January 20th</span>
-          </div>
-          <button className="btn btn-sm btn-outline-secondary">
-            <i className="ion-plus-round"></i>
-            &nbsp;
-            Follow Eric Simons <span className="counter">(10)</span>
-          </button>
-          &nbsp;&nbsp;
-          <button className="btn btn-sm btn-outline-primary">
-            <i className="ion-heart"></i>
-            &nbsp;
-            Favorite Post <span className="counter">(29)</span>
-          </button>
+class Article extends React.Component {
+
+  componentDidMount() {
+    this.props.getArticle(this.props.match.params.slug)
+    this.props.getComments(this.props.match.params.slug)
+  }
+
+  renderComment = (comment) => {
+    return (
+      <div className="card">
+        <div className="card-block">
+          <p className="card-text">{comment.body}</p>
         </div>
-  
-      </div>
-    </div>
-  
-    <div className="container page">
-  
-      <div className="row article-content">
-        <div className="col-md-12">
-          <p>
-          Web development technologies have evolved at an incredible clip over the past few years.
-          </p>
-          <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-          <p>It's a great solution for learning how other frameworks work.</p>
-        </div>
-      </div>
-  
-      <hr />
-  
-      <div className="article-actions">
-        <div className="article-meta">
-          <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-          <div className="info">
-            <a href="" className="author">Eric Simons</a>
-            <span className="date">January 20th</span>
-          </div>
-  
-          <button className="btn btn-sm btn-outline-secondary">
-            <i className="ion-plus-round"></i>
-            &nbsp;
-            Follow Eric Simons <span className="counter">(10)</span>
-          </button>
+        <div className="card-footer">
+          <a href="" className="comment-author">
+            <img src="" className="comment-author-img" />
+          </a>
           &nbsp;
+             <a href="" className="comment-author"></a>
+          <span className="date-posted"></span>
+          <span className="mod-options">
+            <i className="ion-edit"></i>
+            <i className="ion-trash-a"></i>
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  renderComments = () => {
+
+    return (
+      <div className="card">
+        <div className="card-block">
+          <p className="card-text">comment.body</p>
+        </div>
+        <div className="card-footer">
+          <a href="" className="comment-author">
+            <img src="" className="comment-author-img" />
+          </a>
+          &nbsp;
+    <a href="" className="comment-author"></a>
+          <span className="date-posted"></span>
+          <span className="mod-options">
+            <i className="ion-edit"></i>
+            <i className="ion-trash-a"></i>
+          </span>
+        </div>
+      </div>
+    )
+
+  }
+
+  renderArticle = () => {
+    if (this.props.article) {
+      return (
+        <div className="article-page">
+
+          <div className="banner">
+            <div className="container">
+
+              <h1>{this.props.article.title}</h1>
+
+              <div className="article-meta">
+                <a href=""><img src={this.props.article.author.image} /></a>
+                <div className="info">
+                  <a href="" className="author">{this.props.article.author.username}</a>
+                  <span className="date">{this.props.article.createdAt}</span>
+                </div>
+                <button className="btn btn-sm btn-outline-secondary">
+                  <i className="ion-plus-round"></i>
+                  &nbsp;
+            Follow {this.props.article.author.username}
+                  <span className="counter"></span>
+                </button>
+                &nbsp;&nbsp;
           <button className="btn btn-sm btn-outline-primary">
-            <i className="ion-heart"></i>
-            &nbsp;
-            Favorite Post <span className="counter">(29)</span>
-          </button>
-        </div>
-      </div>
-  
-      <div className="row">
-  
-        <div className="col-xs-12 col-md-8 offset-md-2">
-  
-          <form className="card comment-form">
-            <div className="card-block">
-              <textarea className="form-control" placeholder="Write a comment..." rows="3"></textarea>
+                  <i className="ion-heart"></i>
+                  &nbsp;
+            Favorite Post <span className="counter">{this.props.article.favoritesCount}</span>
+                </button>
+              </div>
+
             </div>
-            <div className="card-footer">
-              <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-              <button className="btn btn-sm btn-primary">
-               Post Comment
+          </div>
+
+          <div className="container page">
+
+            <div className="row article-content">
+              <div className="col-md-12">
+                <p>
+                  {this.props.article.description}
+                </p>
+                <h2 id="introducing-ionic">{this.props.article.body}</h2>
+
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="row">
+
+              <div className="col-xs-12 col-md-8 offset-md-2">
+
+                <form className="card comment-form">
+                  <div className="card-block">
+                    <textarea className="form-control" placeholder="Write a comment..." rows="3"></textarea>
+                  </div>
+                  <div className="card-footer">
+                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
+                    <button className="btn btn-sm btn-primary">
+                      Post Comment
               </button>
+                  </div>
+                </form>
+                {this.renderComments()}
+
+              </div>
+
             </div>
-          </form>
-          
-          <div className="card">
-            <div className="card-block">
-              <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div className="card-footer">
-              <a href="" className="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-              </a>
-              &nbsp;
-              <a href="" className="comment-author">Jacob Schmidt</a>
-              <span className="date-posted">Dec 29th</span>
-            </div>
+
           </div>
-  
-          <div className="card">
-            <div className="card-block">
-              <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div className="card-footer">
-              <a href="" className="comment-author">
-                <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-              </a>
-              &nbsp;
-              <a href="" className="comment-author">Jacob Schmidt</a>
-              <span className="date-posted">Dec 29th</span>
-              <span className="mod-options">
-                <i className="ion-edit"></i>
-                <i className="ion-trash-a"></i>
-              </span>
-            </div>
-          </div>
-          
+
         </div>
-  
-      </div>
-  
-    </div>
-  
-  </div>)}
+
+      )
+    }
+    else {
+      return <div>...Loading</div>
+    }
+  }
+
+  render() {
+    //console.log(this.props)
+    return (
+      this.renderArticle()
+    )
+  }
 }
 
-export default Article
+const mapStateToProps = (state) => {
+  return { article: state.profile.article.article, comments: state.profile.comments }
+}
+
+export default connect(mapStateToProps, { getArticle, getComments })(Article)
