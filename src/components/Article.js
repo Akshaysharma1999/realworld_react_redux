@@ -1,59 +1,42 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getArticle, getComments } from '../actions'
-
+import { getArticle, getComments, deleteComments,postComment} from '../actions'
+import { Link } from 'react-router-dom'
+import CommentForm from './CommentForm'
 
 class Article extends React.Component {
 
   componentDidMount() {
     this.props.getArticle(this.props.match.params.slug)
-    this.props.getComments(this.props.match.params.slug)
-  }
-
-  renderComment = (comment) => {
-    return (
-      <div className="card">
-        <div className="card-block">
-          <p className="card-text">{comment.body}</p>
-        </div>
-        <div className="card-footer">
-          <a href="" className="comment-author">
-            <img src="" className="comment-author-img" />
-          </a>
-          &nbsp;
-             <a href="" className="comment-author"></a>
-          <span className="date-posted"></span>
-          <span className="mod-options">
-            <i className="ion-edit"></i>
-            <i className="ion-trash-a"></i>
-          </span>
-        </div>
-      </div>
-    )
-  }
+    this.props.getComments(this.props.match.params.slug)    
+  } 
 
   renderComments = () => {
 
-    return (
-      <div className="card">
-        <div className="card-block">
-          <p className="card-text">comment.body</p>
+    return this.props.comments.map((comment) => {
+      return (
+        <div class="card">
+          <div class="card-block">
+            <p class="card-text">{comment.body}</p>
+          </div>
+          <div class="card-footer">
+            <Link to={`/profile/${comment.author.username}`} class="comment-author">
+              <img src={comment.author.image} class="comment-author-img" />
+            </Link>
+            &nbsp;
+        <Link to={`/profile/${comment.author.username}`} class="comment-author">{comment.author.username}</Link>
+            <span class="date-posted">{comment.createdAt}</span>
+            <span class="mod-options">
+              <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
+            </span>
+          </div>
         </div>
-        <div className="card-footer">
-          <a href="" className="comment-author">
-            <img src="" className="comment-author-img" />
-          </a>
-          &nbsp;
-    <a href="" className="comment-author"></a>
-          <span className="date-posted"></span>
-          <span className="mod-options">
-            <i className="ion-edit"></i>
-            <i className="ion-trash-a"></i>
-          </span>
-        </div>
-      </div>
-    )
+      )
+    })
+  }
 
+  onSubmit=(formValues)=>{
+    this.props.postComment(this.props.match.params.slug,formValues)
   }
 
   renderArticle = () => {
@@ -105,19 +88,8 @@ class Article extends React.Component {
 
             <div className="row">
 
-              <div className="col-xs-12 col-md-8 offset-md-2">
-
-                <form className="card comment-form">
-                  <div className="card-block">
-                    <textarea className="form-control" placeholder="Write a comment..." rows="3"></textarea>
-                  </div>
-                  <div className="card-footer">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" className="comment-author-img" />
-                    <button className="btn btn-sm btn-primary">
-                      Post Comment
-              </button>
-                  </div>
-                </form>
+              <div className="col-xs-12 col-md-8 offset-md-2">  
+               <CommentForm user={this.props.user} onSubmit={this.onSubmit}/>
                 {this.renderComments()}
 
               </div>
@@ -144,7 +116,9 @@ class Article extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { article: state.profile.article.article, comments: state.profile.comments }
+  return { article: state.profile.article.article, comments: state.profile.comments,user:state.profile.user }
 }
 
-export default connect(mapStateToProps, { getArticle, getComments })(Article)
+export default connect(mapStateToProps, { getArticle, getComments, deleteComments,postComment})(Article)
+
+

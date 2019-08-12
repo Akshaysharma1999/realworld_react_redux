@@ -49,7 +49,6 @@ export const getCurrentUser = () => {
         const response = await realworld.get('/user', { headers: headers})
 
         dispatch({ type: 'USER', payload: response.data })
-
     }
 }
 
@@ -90,5 +89,20 @@ export const getComments = (slug)=>{
         const response = await realworld.get(`/articles/${slug}/comments`)
 
         dispatch({type:'GETCOMMENTS',payload:response.data})
+    }
+}
+
+export const deleteComments = (slug,id)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.delete(`/articles/${slug}/comments/${id}`,{ headers: headers})
+        history.push('/')
+    }
+}
+
+export const postComment = (slug,formValues)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.post(`/articles/${slug}/comments`,{"comment":{...formValues}},{ headers: headers})
+        
+        dispatch({type:'ADDCOMMENTS',payload:response.data})
     }
 }

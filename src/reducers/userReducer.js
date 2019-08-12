@@ -41,6 +41,10 @@ export default (state = INITIAL_STATE,action)=>{
     {
         return{...state,comments:action.payload.comments}
     }
+    else if( action.type === 'ADDCOMMENTS')
+    {
+        return{...state,comments:[...state.comments,action.payload.comment]}
+    }
     else
     {
         return state
