@@ -11,6 +11,17 @@ class Article extends React.Component {
     this.props.getComments(this.props.match.params.slug)    
   } 
 
+  renderDelete = (comment)=>{
+    if(comment.author.username === this.props.user.username )
+    {
+      return(
+        <span class="mod-options">
+        <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
+      </span>
+      )
+    }    
+  }
+
   renderComments = () => {
 
     return this.props.comments.map((comment) => {
@@ -26,9 +37,7 @@ class Article extends React.Component {
             &nbsp;
         <Link to={`/profile/${comment.author.username}`} class="comment-author">{comment.author.username}</Link>
             <span class="date-posted">{comment.createdAt}</span>
-            <span class="mod-options">
-              <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
-            </span>
+            {this.renderDelete(comment)}
           </div>
         </div>
       )

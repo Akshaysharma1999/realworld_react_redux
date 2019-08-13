@@ -45,6 +45,18 @@ export default (state = INITIAL_STATE,action)=>{
     {
         return{...state,comments:[...state.comments,action.payload.comment]}
     }
+    else if(action.type === 'FEEDARTICLES')
+    {
+        return{...state,articles:action.payload.articles}
+    }
+    else if(action.type  === 'MYARTICLES')
+    {
+        return {...state,articles:action.payload.articles}
+    }
+    else if(action.type  === 'MYFAVARTICLES')
+    {
+        return {...state,articles:action.payload.articles}
+    }
     else
     {
         return state

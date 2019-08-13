@@ -1,19 +1,21 @@
 import React from 'react'
-import { getProfile, userSettings } from '../actions'
+import { getProfile, userSettings, getMyArticles, getMyFavArticles } from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Settings from './Settings'
+
+let myA = 'active'
+let myFA = ''
 
 class Profile extends React.Component {
 
   componentDidMount() {
     this.props.getProfile(this.props.username)
+    this.props.getMyArticles(this.props.username)
   }
 
   settingsOrFollow = () => {
-   
-      return <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
-   
+    return <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
   }
 
   renderProfile = () => {
@@ -48,6 +50,61 @@ class Profile extends React.Component {
 
   }
 
+  myAC = () => {
+
+     myA = 'active'
+     myFA = ''
+    this.props.getMyArticles(this.props.username)
+  }
+
+  
+  myFAC = () => {
+
+    myFA = 'active'
+    myA = ''
+   this.props.getMyFavArticles(this.props.username)
+  }
+
+
+  articlesToggle = () => {
+    return (
+      <div className="articles-toggle">
+        <ul className="nav nav-pills outline-active">
+          <li className="nav-item">
+            <a className={`nav-link ${myA}`} onClick={this.myAC} to="">My Articles</a>
+          </li>
+          <li className="nav-item">
+            <a className={`nav-link ${myFA}`} onClick={this.myFAC} to="">Favorited Articles</a>
+          </li>
+        </ul>
+      </div>
+    )
+  }
+
+  renderArticle = () => {
+    return this.props.articles.slice(0, 2).map((article) => {
+      return (
+        <div className="article-preview">
+          <div className="article-meta">
+            <a to=""><img src={article.author.image} /></a>
+            <div className="info">
+              <a href="" className="author">{article.author.username}</a>
+              <span className="date">{article.createdAt}</span>
+            </div>
+            <button className="btn btn-outline-primary btn-sm pull-xs-right">
+              <i className="ion-heart"></i> {article.favoritesCount}
+            </button>
+          </div>
+          <Link to={`/article/${article.slug}`} className="preview-link">
+            <h1>{article.title}</h1>
+            <p>{article.body}</p>
+            <span>Read more...</span>
+          </Link>
+        </div>
+      )
+    })
+  }
+
   render() {
     // console.log(this.props.currentProfile)
     return (
@@ -60,58 +117,8 @@ class Profile extends React.Component {
           <div className="row">
 
             <div className="col-xs-12 col-md-10 offset-md-1">
-              <div className="articles-toggle">
-                <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <Link className="nav-link active" to="">My Articles</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="">Favorited Articles</Link>
-                  </li>
-                </ul>
-              </div>
-
-              {/* <div className="article-preview">
-          <div className="article-meta">
-            <a href=""><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
-            <div className="info">
-              <a href="" className="author">Eric Simons</a>
-              <span className="date">January 20th</span>
-            </div>
-            <button className="btn btn-outline-primary btn-sm pull-xs-right">
-              <i className="ion-heart"></i> 29
-            </button>
-          </div>
-          <a href="" className="preview-link">
-            <h1>How to build webapps that scale</h1>
-            <p>This is the description for the post.</p>
-            <span>Read more...</span>
-          </a>
-        </div> */}
-
-              {/* <div className="article-preview">
-          <div className="article-meta">
-            <a href=""><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-            <div className="info">
-              <a href="" className="author">Albert Pai</a>
-              <span className="date">January 20th</span>
-            </div>
-            <button className="btn btn-outline-primary btn-sm pull-xs-right">
-              <i className="ion-heart"></i> 32
-            </button>
-          </div>
-          <a href="" className="preview-link">
-            <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-            <p>This is the description for the post.</p>
-            <span>Read more...</span>
-            <ul className="tag-list">
-              <li className="tag-default tag-pill tag-outline">Music</li>
-              <li className="tag-default tag-pill tag-outline">Song</li>
-            </ul>
-          </a>
-        </div> */}
-
-
+              {this.articlesToggle()}
+              {this.renderArticle()}
             </div>
 
           </div>
@@ -123,8 +130,7 @@ class Profile extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-
-  return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username }
+  return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username, articles: state.profile.articles }
 }
 
-export default connect(mapStateToProps, { getProfile })(Profile)
+export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles })(Profile)

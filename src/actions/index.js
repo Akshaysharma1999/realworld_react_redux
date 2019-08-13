@@ -106,3 +106,44 @@ export const postComment = (slug,formValues)=>{
         dispatch({type:'ADDCOMMENTS',payload:response.data})
     }
 }
+
+export const getFeedArticles = ()=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.get('/articles/feed',{headers:headers})
+
+        dispatch({type:'FEEDARTICLES',payload:response.data})
+    }    
+}
+
+export const getMyArticles = (username)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.get('/articles',{
+            params:{
+                author:username
+            }
+        })
+
+        dispatch({type:'MYARTICLES',payload:response.data})
+    }    
+}
+
+
+export const getMyFavArticles = (username)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.get('/articles',{
+            params:{
+                favorited:username
+            }
+        })
+        dispatch({type:'MYFAVARTICLES',payload:response.data})
+    }    
+}
+
+export const favArticle = (slug)=>{
+    return async (dispatch,getState)=>{
+        console.log(slug)
+        const response = await realworld.post(`/articles/${slug}/favorite`,{},{headers:headers})
+        
+        dispatch({type:'FAVARTICLE',payload:response.data})
+    }
+}
