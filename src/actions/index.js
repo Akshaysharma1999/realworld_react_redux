@@ -63,7 +63,7 @@ export const userSettings = (formValues) => {
 
 export const globalFeed = () => {
     return async (dispatch, getState) => {
-        const response = await realworld.get('/articles')
+        const response = await realworld.get('/articles',{headers:headers})
         dispatch({type:'GLOBAL',payload:response.data})        
     }
 }
@@ -133,7 +133,7 @@ export const getMyFavArticles = (username)=>{
         const response = await realworld.get('/articles',{
             params:{
                 favorited:username
-            }
+            },headers:headers
         })
         dispatch({type:'MYFAVARTICLES',payload:response.data})
     }    
@@ -141,9 +141,19 @@ export const getMyFavArticles = (username)=>{
 
 export const favArticle = (slug)=>{
     return async (dispatch,getState)=>{
-        console.log(slug)
+        //console.log(slug)
         const response = await realworld.post(`/articles/${slug}/favorite`,{},{headers:headers})
         
         dispatch({type:'FAVARTICLE',payload:response.data})
     }
 }
+
+export const unFavArticle = (slug)=>{
+    return async (dispatch,getState)=>{
+       // console.log(slug)
+        const response = await realworld.delete(`/articles/${slug}/favorite`,{headers:headers})
+        
+        dispatch({type:'UNFAVARTICLE',payload:response.data})
+    }
+}
+

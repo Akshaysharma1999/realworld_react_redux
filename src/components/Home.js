@@ -1,12 +1,10 @@
 import React from 'react'
-import { globalFeed, getFeedArticles ,favArticle } from '../actions'
+import { globalFeed, getFeedArticles, favArticle ,unFavArticle} from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 let cyname = ''
 let cgname = 'active'
-
-let favbtn = '-outline'
 
 class Home extends React.Component {
 
@@ -14,9 +12,35 @@ class Home extends React.Component {
         this.props.globalFeed()
     }
 
-    favArticle = (slug)=>{
-        favbtn=''
+    favArticle = (slug) => {        
         this.props.favArticle(slug)
+        this.props.globalFeed()
+    }
+
+    unFavArticle = (slug) => {        
+        this.props.unFavArticle(slug)
+        this.props.globalFeed()
+    }
+
+
+    renderFavBtn = (article) => {
+        
+    if(!article.favorited)
+    {
+        return (
+            <button onClick={() => this.favArticle(article.slug)} className={`btn btn-outline-primary btn-sm pull-xs-right`}>
+                <i className="ion-heart"></i> {article.favoritesCount}
+            </button>
+        )
+    }
+    else{
+        return (
+            <button onClick={()=>this.unFavArticle(article.slug)} className={`btn btn-primary btn-sm pull-xs-right`}>
+                <i className="ion-heart"></i> {article.favoritesCount}
+            </button>
+        )
+    }
+
     }
 
     renderArticle = (article) => {
@@ -28,9 +52,7 @@ class Home extends React.Component {
                         <Link to={`/profile/${article.author.username}`} className="author">{article.author.username}</Link>
                         <span className="date">{article.createdAt}</span>
                     </div>
-                    <button onClick={()=>this.favArticle(article.slug)} className={`btn btn${favbtn}-primary btn-sm pull-xs-right`}>
-                        <i className="ion-heart"></i> {article.favoritesCount}
-                    </button>
+                    {this.renderFavBtn(article)}
                 </div>
                 <Link to={`/article/${article.slug}`} className="preview-link">
                     <h1>{article.title}</h1>
@@ -128,4 +150,4 @@ const mapStateToProps = (state) => {
     return { articles: state.profile.articles }
 }
 
-export default connect(mapStateToProps, { globalFeed, getFeedArticles , favArticle})(Home)
+export default connect(mapStateToProps, { globalFeed, getFeedArticles, favArticle ,unFavArticle})(Home)

@@ -3,6 +3,7 @@ const INITIAL_STATE={
     currentProfile:null,
     user:null,
     articles:[],
+    favarticles:[],
     article:{},
     comments:[]
 }
@@ -56,6 +57,14 @@ export default (state = INITIAL_STATE,action)=>{
     else if(action.type  === 'MYFAVARTICLES')
     {
         return {...state,articles:action.payload.articles}
+    }
+    else if(action.type ==='FAVARTICLE')
+    {      
+           return{...state}
+    }
+    else if(action.type ==='UNFAVARTICLE')
+    {      
+           return{...state}
     }
     else
     {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { getProfile, userSettings, getMyArticles, getMyFavArticles } from '../actions'
+import { getProfile, userSettings, getMyArticles, getMyFavArticles, favArticle,unFavArticle} from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Settings from './Settings'
@@ -81,6 +81,35 @@ class Profile extends React.Component {
     )
   }
 
+  favArticle = (slug)=>{
+    this.props.favArticle(slug)
+    this.props.getMyArticles(this.props.username)
+  }
+
+  unFavArticle = (slug)=>{
+    this.props.unFavArticle(slug)
+   
+  }
+
+  renderFavBtn = (article)=>{
+    if(!article.favorited)
+    {
+    return(
+      <button onClick={()=>this.favArticle(article.slug)} className="btn btn-outline-primary btn-sm pull-xs-right">
+      <i className="ion-heart"></i> {article.favoritesCount}
+    </button>
+    )
+    }
+    else
+    {
+      return(
+        <button onClick={()=>this.unFavArticle(article.slug)} className="btn btn-primary btn-sm pull-xs-right">
+        <i className="ion-heart"></i> {article.favoritesCount}
+      </button>
+      )
+    }
+  }
+
   renderArticle = () => {
     return this.props.articles.slice(0, 2).map((article) => {
       return (
@@ -91,9 +120,7 @@ class Profile extends React.Component {
               <a href="" className="author">{article.author.username}</a>
               <span className="date">{article.createdAt}</span>
             </div>
-            <button className="btn btn-outline-primary btn-sm pull-xs-right">
-              <i className="ion-heart"></i> {article.favoritesCount}
-            </button>
+           {this.renderFavBtn(article)}
           </div>
           <Link to={`/article/${article.slug}`} className="preview-link">
             <h1>{article.title}</h1>
@@ -133,4 +160,4 @@ const mapStateToProps = (state, ownProps) => {
   return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username, articles: state.profile.articles }
 }
 
-export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles })(Profile)
+export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles,favArticle,unFavArticle})(Profile)
