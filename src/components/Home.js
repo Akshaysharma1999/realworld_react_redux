@@ -2,9 +2,11 @@ import React from 'react'
 import { globalFeed, getFeedArticles, favArticle ,unFavArticle} from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { async } from 'q';
 
 let cyname = ''
 let cgname = 'active'
+let yf = 0
 
 class Home extends React.Component {
 
@@ -12,14 +14,27 @@ class Home extends React.Component {
         this.props.globalFeed()
     }
 
-    favArticle = (slug) => {        
-        this.props.favArticle(slug)
-        this.props.globalFeed()
+    favArticle = async(slug) => {        
+        await this.props.favArticle(slug)
+        if(yf == 0)
+        {
+            await this.props.globalFeed()
+        }
+        else{
+            await this.props.getFeedArticles()
+        }
+        
     }
 
-    unFavArticle = (slug) => {        
-        this.props.unFavArticle(slug)
-        this.props.globalFeed()
+    unFavArticle = async(slug) => {        
+        await this.props.unFavArticle(slug)
+        if(yf == 0)
+        {
+            await this.props.globalFeed()
+        }
+        else{
+            await this.props.getFeedArticles()
+        }
     }
 
 
@@ -63,15 +78,17 @@ class Home extends React.Component {
     }
 
     globalOnClick = () => {
+        this.props.globalFeed()
         cyname = ''
         cgname = 'active'
-        this.props.globalFeed()
+        yf=0        
     }
 
     yourOnClick = () => {
+        this.props.getFeedArticles()
         cgname = ''
         cyname = 'active'
-        this.props.getFeedArticles()
+        yf = 1      
     }
 
     feedToggle = () => {

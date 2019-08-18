@@ -1,11 +1,12 @@
 import React from 'react'
-import { getProfile, userSettings, getMyArticles, getMyFavArticles, favArticle,unFavArticle} from '../actions'
+import { getProfile, userSettings, getMyArticles, getMyFavArticles, favArticle, unFavArticle } from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Settings from './Settings'
 
 let myA = 'active'
 let myFA = ''
+let temp = 0
 
 class Profile extends React.Component {
 
@@ -52,17 +53,19 @@ class Profile extends React.Component {
 
   myAC = () => {
 
-     myA = 'active'
-     myFA = ''
+    myA = 'active'
+    myFA = ''
     this.props.getMyArticles(this.props.username)
+    temp = 0
   }
 
-  
+
   myFAC = () => {
 
     myFA = 'active'
     myA = ''
-   this.props.getMyFavArticles(this.props.username)
+    this.props.getMyFavArticles(this.props.username)
+    temp = 1
   }
 
 
@@ -81,31 +84,39 @@ class Profile extends React.Component {
     )
   }
 
-  favArticle = (slug)=>{
-    this.props.favArticle(slug)
-    this.props.getMyArticles(this.props.username)
-  }
-
-  unFavArticle = (slug)=>{
-    this.props.unFavArticle(slug)
-   
-  }
-
-  renderFavBtn = (article)=>{
-    if(!article.favorited)
-    {
-    return(
-      <button onClick={()=>this.favArticle(article.slug)} className="btn btn-outline-primary btn-sm pull-xs-right">
-      <i className="ion-heart"></i> {article.favoritesCount}
-    </button>
-    )
+  favArticle = async (slug) => {
+    await this.props.favArticle(slug)
+    if (temp == 0) {
+      await this.props.getMyArticles(this.props.username)
     }
-    else
-    {
-      return(
-        <button onClick={()=>this.unFavArticle(article.slug)} className="btn btn-primary btn-sm pull-xs-right">
-        <i className="ion-heart"></i> {article.favoritesCount}
-      </button>
+    else {
+      await this.props.getMyFavArticles(this.props.username)
+    }
+  }
+
+  unFavArticle = async (slug) => {
+    await this.props.unFavArticle(slug)
+    if (temp == 0) {
+      await this.props.getMyArticles(this.props.username)
+    }
+    else {
+      await this.props.getMyFavArticles(this.props.username)
+    }
+  }
+
+  renderFavBtn = (article) => {
+    if (!article.favorited) {
+      return (
+        <button onClick={() => this.favArticle(article.slug)} className="btn btn-outline-primary btn-sm pull-xs-right">
+          <i className="ion-heart"></i> {article.favoritesCount}
+        </button>
+      )
+    }
+    else {
+      return (
+        <button onClick={() => this.unFavArticle(article.slug)} className="btn btn-primary btn-sm pull-xs-right">
+          <i className="ion-heart"></i> {article.favoritesCount}
+        </button>
       )
     }
   }
@@ -120,7 +131,7 @@ class Profile extends React.Component {
               <a href="" className="author">{article.author.username}</a>
               <span className="date">{article.createdAt}</span>
             </div>
-           {this.renderFavBtn(article)}
+            {this.renderFavBtn(article)}
           </div>
           <Link to={`/article/${article.slug}`} className="preview-link">
             <h1>{article.title}</h1>
@@ -160,4 +171,4 @@ const mapStateToProps = (state, ownProps) => {
   return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username, articles: state.profile.articles }
 }
 
-export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles,favArticle,unFavArticle})(Profile)
+export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles, favArticle, unFavArticle })(Profile)
