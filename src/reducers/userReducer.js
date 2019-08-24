@@ -5,7 +5,8 @@ const INITIAL_STATE={
     articles:[],
     favarticles:[],
     article:{},
-    comments:[]
+    comments:[],
+    tags:[]
 }
 
 export default (state = INITIAL_STATE,action)=>{
@@ -65,6 +66,14 @@ export default (state = INITIAL_STATE,action)=>{
     else if(action.type ==='UNFAVARTICLE')
     {      
            return{...state}
+    }
+    else if(action.type === 'GETTAGS')
+    {
+        return{...state,tags:action.payload.tags}
+    }
+    else if(action.type === 'GETBYTAG')
+    {
+        return{...state,articles:action.payload.articles}
     }
     else
     {

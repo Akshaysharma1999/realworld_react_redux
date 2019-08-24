@@ -1,5 +1,5 @@
 import React from 'react'
-import { globalFeed, getFeedArticles, favArticle ,unFavArticle} from '../actions'
+import { globalFeed, getFeedArticles, favArticle, unFavArticle, getTags, getByTag } from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { async } from 'q';
@@ -7,54 +7,54 @@ import { async } from 'q';
 let cyname = ''
 let cgname = 'active'
 let yf = 0
+let tagToggle = 0
+let tagname = ''
 
 class Home extends React.Component {
 
     componentDidMount() {
         this.props.globalFeed()
+        this.props.getTags()
     }
 
-    favArticle = async(slug) => {        
+    favArticle = async (slug) => {
         await this.props.favArticle(slug)
-        if(yf == 0)
-        {
+        if (yf === 0) {
             await this.props.globalFeed()
         }
-        else{
+        else {
             await this.props.getFeedArticles()
         }
-        
+
     }
 
-    unFavArticle = async(slug) => {        
+    unFavArticle = async (slug) => {
         await this.props.unFavArticle(slug)
-        if(yf == 0)
-        {
+        if (yf === 0) {
             await this.props.globalFeed()
         }
-        else{
+        else {
             await this.props.getFeedArticles()
         }
     }
 
 
     renderFavBtn = (article) => {
-        
-    if(!article.favorited)
-    {
-        return (
-            <button onClick={() => this.favArticle(article.slug)} className={`btn btn-outline-primary btn-sm pull-xs-right`}>
-                <i className="ion-heart"></i> {article.favoritesCount}
-            </button>
-        )
-    }
-    else{
-        return (
-            <button onClick={()=>this.unFavArticle(article.slug)} className={`btn btn-primary btn-sm pull-xs-right`}>
-                <i className="ion-heart"></i> {article.favoritesCount}
-            </button>
-        )
-    }
+
+        if (!article.favorited) {
+            return (
+                <button onClick={() => this.favArticle(article.slug)} className={`btn btn-outline-primary btn-sm pull-xs-right`}>
+                    <i className="ion-heart"></i> {article.favoritesCount}
+                </button>
+            )
+        }
+        else {
+            return (
+                <button onClick={() => this.unFavArticle(article.slug)} className={`btn btn-primary btn-sm pull-xs-right`}>
+                    <i className="ion-heart"></i> {article.favoritesCount}
+                </button>
+            )
+        }
 
     }
 
@@ -62,7 +62,7 @@ class Home extends React.Component {
         return (
             <div className="article-preview" key={article.slug}>
                 <div className="article-meta">
-                    <Link to={`/profile/${article.author.username}`}><img src={article.author.image} /></Link>
+                    <Link to={`/profile/${article.author.username}`}><img alt="img" src={article.author.image} /></Link>
                     <div className="info">
                         <Link to={`/profile/${article.author.username}`} className="author">{article.author.username}</Link>
                         <span className="date">{article.createdAt}</span>
@@ -79,16 +79,31 @@ class Home extends React.Component {
 
     globalOnClick = () => {
         this.props.globalFeed()
+        tagToggle = 0
         cyname = ''
         cgname = 'active'
-        yf=0        
+        yf = 0
     }
 
     yourOnClick = () => {
         this.props.getFeedArticles()
+        tagToggle = 0
         cgname = ''
         cyname = 'active'
-        yf = 1      
+        yf = 1
+    }
+
+    renderTagToggle = () => {         
+        if(tagToggle === 1)
+        {
+            cgname=''
+            cyname=''            
+            return (
+                <li className="nav-item">
+                    <Link className={`nav-link active`} to="" >{`# ${tagname}`}</Link>
+                </li>
+            )
+        }          
     }
 
     feedToggle = () => {
@@ -101,6 +116,7 @@ class Home extends React.Component {
                     <li className="nav-item">
                         <Link className={`nav-link ${cgname}`} to="" onClick={this.globalOnClick} >Global Feed</Link>
                     </li>
+                    {this.renderTagToggle()}
                 </ul>
             </div>
         )
@@ -120,7 +136,23 @@ class Home extends React.Component {
         )
     }
 
+    renderTagList = (tags) => {
+
+        return (
+            tags.slice(0, 20).map((tag) => {
+                return <Link to="" onClick={() => this.tagOnClick(tag)} className="tag-pill tag-default">{tag}</Link>
+            })
+        )
+    }
+
+    tagOnClick = (tag) => {
+        this.props.getByTag(tag)
+        tagToggle = 1
+        tagname = tag
+    }
+
     render() {
+        // console.log(this.props.tags)
 
         return (
             <div className="home-page" >
@@ -141,17 +173,8 @@ class Home extends React.Component {
                         <div className="col-md-3">
                             <div className="sidebar">
                                 <p>Popular Tags</p>
+                                {this.renderTagList(this.props.tags)}
 
-                                <div className="tag-list">
-                                    <a href="" className="tag-pill tag-default">programming</a>
-                                    <a href="" className="tag-pill tag-default">javascript</a>
-                                    <a href="" className="tag-pill tag-default">emberjs</a>
-                                    <a href="" className="tag-pill tag-default">angularjs</a>
-                                    <a href="" className="tag-pill tag-default">react</a>
-                                    <a href="" className="tag-pill tag-default">mean</a>
-                                    <a href="" className="tag-pill tag-default">node</a>
-                                    <a href="" className="tag-pill tag-default">rails</a>
-                                </div>
                             </div>
                         </div>
 
@@ -164,7 +187,7 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return { articles: state.profile.articles }
+    return { articles: state.profile.articles, tags: state.profile.tags }
 }
 
-export default connect(mapStateToProps, { globalFeed, getFeedArticles, favArticle ,unFavArticle})(Home)
+export default connect(mapStateToProps, { globalFeed, getFeedArticles, favArticle, getTags, unFavArticle, getByTag })(Home)

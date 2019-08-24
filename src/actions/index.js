@@ -158,3 +158,24 @@ export const unFavArticle = (slug)=>{
     }
 }
 
+export const getTags = ()=>{
+    return async (dispatch,getState)=>{
+       
+        const response = await realworld.get(`/tags`)
+        
+        dispatch({type:'GETTAGS',payload:response.data})
+    }
+}
+
+export const getByTag= (tag)=>{
+    return async (dispatch,getState)=>{
+        const response = await realworld.get('/articles',{
+        headers:headers,
+            params:{
+                tag:tag
+            }
+        })
+        dispatch({type:'GETBYTAG',payload:response.data})
+    }    
+}
+
