@@ -179,3 +179,12 @@ export const getByTag= (tag)=>{
     }    
 }
 
+// export const editArticle= (slug,data)=>{
+//     return async (dispatch,getState)=>{
+//         const response = await realworld.put(`/articles/${slug}`,{headers:headers})
+  
+//         dispatch({type:'EDITARTICLE',payload:response.data})
+//     }    
+// }
+
+

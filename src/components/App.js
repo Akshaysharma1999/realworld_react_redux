@@ -26,7 +26,7 @@ const App = () => {
                         <Route path ="/settings" exact component ={Settings}/>
                         <Route path = "/createArticle" exact component={Create_Edit_Article}/>
                         <Route path = "/form" exact component={Form}/>
-                        <Route path = "/article/:slug" exact component={Article}/>
+                        <Route path = "/article/:slug" exact component={Article}/>                        
                     </Switch>
                 <Footer/>
             </Router>

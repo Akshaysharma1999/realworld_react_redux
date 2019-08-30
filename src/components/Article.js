@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getArticle, getComments, deleteComments,postComment} from '../actions'
+import { getArticle, getComments, deleteComments, postComment } from '../actions'
 import { Link } from 'react-router-dom'
 import CommentForm from './CommentForm'
 
@@ -8,18 +8,17 @@ class Article extends React.Component {
 
   componentDidMount() {
     this.props.getArticle(this.props.match.params.slug)
-    this.props.getComments(this.props.match.params.slug)    
-  } 
+    this.props.getComments(this.props.match.params.slug)
+  }
 
-  renderDelete = (comment)=>{
-    if(comment.author.username === this.props.user.username )
-    {
-      return(
+  renderDelete = (comment) => {
+    if (comment.author.username === this.props.user.username) {
+      return (
         <span class="mod-options">
-        <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
-      </span>
+          <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
+        </span>
       )
-    }    
+    }
   }
 
   renderComments = () => {
@@ -44,9 +43,40 @@ class Article extends React.Component {
     })
   }
 
-  onSubmit=(formValues)=>{
-    this.props.postComment(this.props.match.params.slug,formValues)
+  onSubmit = (formValues) => {
+    this.props.postComment(this.props.match.params.slug, formValues)
   }
+
+  // editArticle = () => {
+  //   if (this.props.article.author.username === this.props.user.username) {
+  //     return (<button className="btn btn-sm btn-outline-secondary">
+  //       <Link to={`/article/edit`}><i className="ion-edit"></i>
+  //       &nbsp;
+  //   Edit Article</Link>
+  //   <span className="counter"></span>
+  //     </button>)
+  //   }
+  //   else {
+  //     return <div></div>
+  //   }
+  // }
+
+  // deleteArticle = () => {
+  //   if (this.props.article.author.username === this.props.user.username) {
+  //     return (
+  //       <button className="btn btn-sm btn-outline-danger">
+  //         <i className="ion-trash-a"></i>
+  //         &nbsp;
+  //     Delete Article
+  // </button>
+  //     )
+  //   }
+  //   else
+  //   {
+  //     return <div></div>
+  //   }
+
+  // }
 
   renderArticle = () => {
     if (this.props.article) {
@@ -64,18 +94,12 @@ class Article extends React.Component {
                   <a href="" className="author">{this.props.article.author.username}</a>
                   <span className="date">{this.props.article.createdAt}</span>
                 </div>
-                <button className="btn btn-sm btn-outline-secondary">
-                  <i className="ion-plus-round"></i>
-                  &nbsp;
-            Follow {this.props.article.author.username}
-                  <span className="counter"></span>
-                </button>
+
+                {/* {this.editArticle()} */}
+
                 &nbsp;&nbsp;
-          <button className="btn btn-sm btn-outline-primary">
-                  <i className="ion-heart"></i>
-                  &nbsp;
-            Favorite Post <span className="counter">{this.props.article.favoritesCount}</span>
-                </button>
+
+                {/* {this.deleteArticle()} */}
               </div>
 
             </div>
@@ -97,8 +121,8 @@ class Article extends React.Component {
 
             <div className="row">
 
-              <div className="col-xs-12 col-md-8 offset-md-2">  
-               <CommentForm user={this.props.user} onSubmit={this.onSubmit}/>
+              <div className="col-xs-12 col-md-8 offset-md-2">
+                <CommentForm user={this.props.user} onSubmit={this.onSubmit} />
                 {this.renderComments()}
 
               </div>
@@ -125,9 +149,9 @@ class Article extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { article: state.profile.article.article, comments: state.profile.comments,user:state.profile.user }
+  return { article: state.profile.article.article, comments: state.profile.comments, user: state.profile.user }
 }
 
-export default connect(mapStateToProps, { getArticle, getComments, deleteComments,postComment})(Article)
+export default connect(mapStateToProps, { getArticle, getComments, deleteComments, postComment })(Article)
 
 
