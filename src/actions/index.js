@@ -15,29 +15,13 @@ export const signup = (formValues) => {
         history.push('/login')
     }
 }
-
-help = ()=>{
-    while(true)
-    {
-    if(headers.Authorization === `Token ${null}`)
-    {
-     
-    }
-    else
-    {
-        return true;
-    }
-    }
-}
-
 export const login = (formValues) => {
 
     return async (dispatch, getState) => {
         const response = await realworld.post('/users/login', { "user": { ...formValues } })
         await localStorage.setItem('jwt', JSON.stringify(response.data.user.token)) 
-        await dispatch({ type: 'LOGIN', payload: response.data })
-        await help()
-        await history.push(`/profile/${response.data.user.username}`)
+        await dispatch({ type: 'LOGIN', payload: response.data })        
+       history.push(`/profile/${response.data.user.username}`)
     }
 }
 
