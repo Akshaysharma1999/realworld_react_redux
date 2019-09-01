@@ -12,7 +12,7 @@ export const signup = (formValues) => {
 
     return async (dispatch, getState) => {
         const response = await realworld.post('/users', { "user": { ...formValues } })
-        history.push('/login')
+        history.push('/home')
     }
 }
 
