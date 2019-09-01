@@ -20,17 +20,10 @@ export const login = (formValues) => {
 
     return async (dispatch, getState) => {
         const response = await realworld.post('/users/login', { "user": { ...formValues } })
-        localStorage.setItem('jwt', JSON.stringify(response.data.user.token))
-
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${response.data.user.token}` 
-        }
-
-        dispatch({ type: 'LOGIN', payload: response.data })
+        await localStorage.setItem('jwt', JSON.stringify(response.data.user.token)) 
+        await dispatch({ type: 'LOGIN', payload: response.data })
         history.push(`/profile/${response.data.user.username}`)
     }
-
 }
 
 export const logout = () => {
