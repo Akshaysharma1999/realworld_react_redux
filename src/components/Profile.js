@@ -10,9 +10,9 @@ let temp = 0
 
 class Profile extends React.Component {
 
-  componentDidMount() {
-    this.props.getProfile(this.props.username)
-    this.props.getMyArticles(this.props.username)
+  componentDidMount =async()=>{
+    await this.props.getProfile(this.props.username)
+    await this.props.getMyArticles(this.props.username)
   }
 
   settingsOrFollow = () => {
