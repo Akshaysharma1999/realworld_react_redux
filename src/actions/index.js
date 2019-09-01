@@ -118,7 +118,7 @@ export const getFeedArticles = ()=>{
 export const getMyArticles = (username)=>{
     return async (dispatch,getState)=>{
         const response = await realworld.get('/articles',{
-        headers:`Token ${getState.profile.user.token}`,
+        headers:headers,
             params:{
                 author:username
             }
