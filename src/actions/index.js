@@ -2,8 +2,7 @@ import realworld from '../api/realworld'
 import history from '../history'
 import { async } from 'q';
 
-
-const headers = {
+let headers = {
     'Content-Type': 'application/json',
      'Authorization': `Token ${JSON.parse(localStorage.getItem('jwt'))}` 
 }
@@ -112,7 +111,8 @@ export const getFeedArticles = ()=>{
     }    
 }
 
-export const getMyArticles = (username)=>{    
+export const getMyArticles = (username)=>{
+    
     headers = {
       'Content-Type': 'application/json',
       'Authorization': `Token ${JSON.parse(localStorage.getItem('jwt'))}` 
