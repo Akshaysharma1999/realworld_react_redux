@@ -1,5 +1,5 @@
 import React from 'react'
-import { getProfile, userSettings, getMyArticles, getMyFavArticles, favArticle, unFavArticle } from '../actions'
+import { getProfile, userSettings, getMyArticles, getMyFavArticles, favArticle, unFavArticle ,followUser,unfollowUser} from '../actions'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Settings from './Settings'
@@ -7,16 +7,46 @@ import Settings from './Settings'
 let myA = 'active'
 let myFA = ''
 let temp = 0
+let foll = 0 
 
 class Profile extends React.Component {
 
-  componentDidMount =()=>{
-     this.props.getProfile(this.props.username)
-     this.props.getMyArticles(this.props.username)
+  componentDidMount = () => {
+    this.props.getProfile(this.props.username)
+    this.props.getMyArticles(this.props.username)
+  }
+
+  renderfUbtn = () => {
+    return (
+      <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" >
+        <i className="ion-gear-a"></i> Follow 
+      </Link>
+
+    )
+  }
+
+  followBtn=()=>{
+    this.props.followUser(this.props.currentProfile.profile.username)
+  }
+
+  unfollowBtn=()=>{
+    this.props.unfollowUser(this.props.currentProfile.profile.username)
   }
 
   settingsOrFollow = () => {
-    return <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
+    if (this.props.currentProfile === this.props.user) {
+      return <Link className="btn btn-sm btn-outline-secondary action-btn" to="/settings" ><i className="ion-gear-a"></i> Edit Profile Settings</Link>
+    }
+    else {
+      if(!this.props.currentProfile.profile.following)
+      {
+        return <Link onClick={this.followBtn} className="btn btn-sm btn-outline-secondary action-btn" to={`/profile/${this.props.currentProfile.profile.username}`} ><i className="ion-plus-round"></i> Follow  {this.props.currentProfile.profile.username}</Link>
+      }
+      else
+      {
+        return <Link onClick={this.unfollowBtn} className="btn btn-sm btn-outline-secondary action-btn" to={`/profile/${this.props.currentProfile.profile.username}`} ><i className="ion-minus-round"></i> UnFollow  {this.props.currentProfile.profile.username}</Link>
+      }
+    }
   }
 
   renderProfile = () => {
@@ -168,7 +198,7 @@ class Profile extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username, articles: state.profile.articles }
+  return { currentProfile: state.profile.currentProfile, username: ownProps.match.params.username, articles: state.profile.articles, user: state.profile.user }
 }
 
-export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles, favArticle, unFavArticle })(Profile)
+export default connect(mapStateToProps, { getProfile, getMyArticles, getMyFavArticles, favArticle, unFavArticle,followUser,unfollowUser})(Profile)

@@ -14,9 +14,9 @@ class Article extends React.Component {
   renderDelete = (comment) => {
     if (comment.author.username === this.props.user.username) {
       return (
-        <span class="mod-options">
+        <Link to='/'><span class="mod-options">
           <i class="ion-trash-a" onClick={() => this.props.deleteComments(this.props.match.params.slug, comment.id)}></i>
-        </span>
+        </span></Link>
       )
     }
   }
