@@ -47,6 +47,10 @@ export default (state = INITIAL_STATE,action)=>{
     {
         return{...state,comments:[...state.comments,action.payload.comment]}
     }
+    else if(action.type === 'DELETECMNTS')
+    {
+        return{...state}
+    }
     else if(action.type === 'FEEDARTICLES')
     {
         return{...state,articles:action.payload.articles}
@@ -74,6 +78,14 @@ export default (state = INITIAL_STATE,action)=>{
     else if(action.type === 'GETBYTAG')
     {
         return{...state,articles:action.payload.articles}
+    }
+    else if(action.type === 'FOLLOW')
+    {
+        return {...state,currentProfile:action.payload}
+    }
+    else if(action.type === 'UNFOLLOW')
+    {
+        return {...state,currentProfile:action.payload}
     }
     else
     {
