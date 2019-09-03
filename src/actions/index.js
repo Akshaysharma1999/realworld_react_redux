@@ -112,7 +112,11 @@ export const getFeedArticles = ()=>{
     }    
 }
 
-export const getMyArticles = (username)=>{
+export const getMyArticles = (username)=>{    
+    headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${JSON.parse(localStorage.getItem('jwt'))}` 
+     }
     return async (dispatch,getState)=>{
         const response = await realworld.get('/articles',{
         headers:headers,
