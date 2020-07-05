@@ -42,6 +42,6 @@ The site is deployed at ```https://react-redux-realworldio.herokuapp.com```
 * run ```npm install``` to install all dependencies
 * run ```npm start``` to run the server
 
-## APP INFO
+## API INFO
 * Api ``` https://conduit.productionready.io/api```
 * ```realworld.io```
